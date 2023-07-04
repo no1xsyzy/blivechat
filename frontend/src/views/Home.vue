@@ -1,12 +1,26 @@
 <template>
   <div>
     <p>
-      <el-form :model="form" ref="form" label-width="150px" :rules="{
-        roomId: [
-          {required: true, message: $t('home.roomIdEmpty'), trigger: 'blur'},
-          {type: 'integer', min: 1, message: $t('home.roomIdInteger'), trigger: 'blur'}
-        ]
-      }">
+      <el-form
+        :model="form"
+        ref="form"
+        label-width="150px"
+        :rules="{
+          roomId: [
+            {
+              required: true,
+              message: $t('home.roomIdEmpty'),
+              trigger: 'blur'
+            },
+            {
+              type: 'integer',
+              min: 1,
+              message: $t('home.roomIdInteger'),
+              trigger: 'blur'
+            }
+          ]
+        }"
+      >
         <el-tabs type="border-card">
           <el-tab-pane :label="$t('home.general')">
             <el-form-item :label="$t('home.roomId')" required prop="roomId">
@@ -81,15 +95,30 @@
               </el-col>
               <el-col :xs="24" :sm="12">
                 <el-form-item :label="$t('home.blockMedalLevel')">
-                  <el-slider v-model="form.blockMedalLevel" show-input :min="0" :max="40"></el-slider>
+                  <el-slider
+                    v-model="form.blockMedalLevel"
+                    show-input
+                    :min="0"
+                    :max="40"
+                  ></el-slider>
                 </el-form-item>
               </el-col>
             </el-row>
             <el-form-item :label="$t('home.blockKeywords')">
-              <el-input v-model="form.blockKeywords" type="textarea" :rows="5" :placeholder="$t('home.onePerLine')"></el-input>
+              <el-input
+                v-model="form.blockKeywords"
+                type="textarea"
+                :rows="5"
+                :placeholder="$t('home.onePerLine')"
+              ></el-input>
             </el-form-item>
             <el-form-item :label="$t('home.blockUsers')">
-              <el-input v-model="form.blockUsers" type="textarea" :rows="5" :placeholder="$t('home.onePerLine')"></el-input>
+              <el-input
+                v-model="form.blockUsers"
+                type="textarea"
+                :rows="5"
+                :placeholder="$t('home.onePerLine')"
+              ></el-input>
             </el-form-item>
           </el-tab-pane>
 
@@ -102,15 +131,18 @@
               </el-col>
               <el-col :xs="24" :sm="8">
                 <el-form-item :label="$t('home.autoTranslate')">
-                  <el-switch v-model="form.autoTranslate" :disabled="!serverConfig.enableTranslate || !form.relayMessagesByServer"></el-switch>
+                  <el-switch
+                    v-model="form.autoTranslate"
+                    :disabled="!serverConfig.enableTranslate || !form.relayMessagesByServer"
+                  ></el-switch>
                 </el-form-item>
               </el-col>
             </el-row>
             <el-form-item :label="$t('home.giftUsernamePronunciation')">
               <el-radio-group v-model="form.giftUsernamePronunciation">
-                <el-radio label="">{{$t('home.dontShow')}}</el-radio>
-                <el-radio label="pinyin">{{$t('home.pinyin')}}</el-radio>
-                <el-radio label="kana">{{$t('home.kana')}}</el-radio>
+                <el-radio label="">{{ $t('home.dontShow') }}</el-radio>
+                <el-radio label="pinyin">{{ $t('home.pinyin') }}</el-radio>
+                <el-radio label="kana">{{ $t('home.kana') }}</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-tab-pane>
@@ -118,28 +150,37 @@
           <el-tab-pane :label="$t('home.emoticon')">
             <el-table :data="form.emoticons">
               <el-table-column prop="keyword" :label="$t('home.emoticonKeyword')" width="170">
-                <template slot-scope="scope">
+                <template v-slot="scope">
                   <el-input v-model="scope.row.keyword"></el-input>
                 </template>
               </el-table-column>
               <el-table-column prop="url" :label="$t('home.emoticonUrl')">
-                <template slot-scope="scope">
+                <template v-slot="scope">
                   <el-input v-model="scope.row.url"></el-input>
                 </template>
               </el-table-column>
               <el-table-column :label="$t('home.operation')" width="170">
-                <template slot-scope="scope">
+                <template v-slot="scope">
                   <el-button-group>
-                    <el-button type="primary" icon="el-icon-upload2" :disabled="!serverConfig.enableUploadFile"
+                    <el-button
+                      type="primary"
+                      :icon="ElIconUpload2"
+                      :disabled="!serverConfig.enableUploadFile"
                       @click="uploadEmoticon(scope.row)"
                     ></el-button>
-                    <el-button type="danger" icon="el-icon-minus" @click="delEmoticon(scope.$index)"></el-button>
+                    <el-button
+                      type="danger"
+                      :icon="ElIconMinus"
+                      @click="delEmoticon(scope.$index)"
+                    ></el-button>
                   </el-button-group>
                 </template>
               </el-table-column>
             </el-table>
             <p>
-              <el-button type="primary" icon="el-icon-plus" @click="addEmoticon">{{$t('home.addEmoticon')}}</el-button>
+              <el-button type="primary" :icon="ElIconPlus" @click="addEmoticon">{{
+                $t('home.addEmoticon')
+              }}</el-button>
             </p>
           </el-tab-pane>
         </el-tabs>
@@ -150,14 +191,21 @@
       <el-card>
         <el-form :model="form" label-width="150px">
           <el-form-item :label="$t('home.roomUrl')">
-            <el-input ref="roomUrlInput" readonly :value="obsRoomUrl" style="width: calc(100% - 8em); margin-right: 1em;"></el-input>
-            <el-button type="primary" icon="el-icon-copy-document" @click="copyUrl"></el-button>
+            <el-input
+              ref="roomUrlInput"
+              readonly
+              :model-value="obsRoomUrl"
+              style="width: calc(100% - 8em); margin-right: 1em"
+            ></el-input>
+            <el-button type="primary" :icon="ElIconCopyDocument" @click="copyUrl"></el-button>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" :disabled="!roomUrl" @click="enterRoom">{{$t('home.enterRoom')}}</el-button>
-            <el-button @click="enterTestRoom">{{$t('home.enterTestRoom')}}</el-button>
-            <el-button @click="exportConfig">{{$t('home.exportConfig')}}</el-button>
-            <el-button @click="importConfig">{{$t('home.importConfig')}}</el-button>
+            <el-button type="primary" :disabled="!roomUrl" @click="enterRoom">{{
+              $t('home.enterRoom')
+            }}</el-button>
+            <el-button @click="enterTestRoom">{{ $t('home.enterTestRoom') }}</el-button>
+            <el-button @click="exportConfig">{{ $t('home.exportConfig') }}</el-button>
+            <el-button @click="importConfig">{{ $t('home.importConfig') }}</el-button>
           </el-form-item>
         </el-form>
       </el-card>
@@ -166,6 +214,12 @@
 </template>
 
 <script>
+import {
+  Upload as ElIconUpload2,
+  Minus as ElIconMinus,
+  Plus as ElIconPlus,
+  CopyDocument as ElIconCopyDocument
+} from '@element-plus/icons-vue'
 import _ from 'lodash'
 import download from 'downloadjs'
 
@@ -174,7 +228,6 @@ import * as mainApi from '@/api/main'
 import * as chatConfig from '@/api/chatConfig'
 
 export default {
-  name: 'Home',
   data() {
     return {
       serverConfig: {
@@ -185,9 +238,14 @@ export default {
       form: {
         ...chatConfig.getLocalConfig(),
         roomId: parseInt(window.localStorage.roomId || '1')
-      }
+      },
+      ElIconUpload2,
+      ElIconMinus,
+      ElIconPlus,
+      ElIconCopyDocument
     }
   },
+  name: 'Home',
   computed: {
     roomUrl() {
       return this.getRoomUrl(false)
@@ -205,7 +263,7 @@ export default {
     }
   },
   watch: {
-    roomUrl: _.debounce(function() {
+    roomUrl: _.debounce(function () {
       window.localStorage.roomId = this.form.roomId
       chatConfig.setLocalConfig(this.form)
     }, 500)
@@ -236,7 +294,7 @@ export default {
       let input = document.createElement('input')
       input.type = 'file'
       input.accept = 'image/png, image/jpeg, image/jpg, image/gif'
-      input.onchange = async() => {
+      input.onchange = async () => {
         let file = input.files[0]
         if (file.size > 1024 * 1024) {
           this.$message.error(this.$t('home.emoticonFileTooLarge'))
@@ -256,10 +314,18 @@ export default {
     },
 
     enterRoom() {
-      window.open(this.roomUrl, `room ${this.form.roomId}`, 'menubar=0,location=0,scrollbars=0,toolbar=0,width=600,height=600')
+      window.open(
+        this.roomUrl,
+        `room ${this.form.roomId}`,
+        'menubar=0,location=0,scrollbars=0,toolbar=0,width=600,height=600'
+      )
     },
     enterTestRoom() {
-      window.open(this.getRoomUrl(true), 'test room', 'menubar=0,location=0,scrollbars=0,toolbar=0,width=600,height=600')
+      window.open(
+        this.getRoomUrl(true),
+        'test room',
+        'menubar=0,location=0,scrollbars=0,toolbar=0,width=600,height=600'
+      )
     },
     getRoomUrl(isTestRoom) {
       if (!isTestRoom && this.form.roomId === '') {
@@ -277,7 +343,11 @@ export default {
       if (isTestRoom) {
         resolved = this.$router.resolve({ name: 'test_room', query })
       } else {
-        resolved = this.$router.resolve({ name: 'room', params: { roomId: this.form.roomId }, query })
+        resolved = this.$router.resolve({
+          name: 'room',
+          params: { roomId: this.form.roomId },
+          query
+        })
       }
       return `${window.location.protocol}//${window.location.host}${resolved.href}`
     },

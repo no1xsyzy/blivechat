@@ -1,5 +1,9 @@
 <template>
-  <chat-renderer ref="renderer" :maxNumber="config.maxNumber" :showGiftName="config.showGiftName"></chat-renderer>
+  <chat-renderer
+    ref="renderer"
+    :maxNumber="config.maxNumber"
+    :showGiftName="config.showGiftName"
+  ></chat-renderer>
 </template>
 
 <script>
@@ -11,7 +15,7 @@ import * as chatConfig from '@/api/chatConfig'
 import ChatClientTest from '@/api/chat/ChatClientTest'
 import ChatClientDirect from '@/api/chat/ChatClientDirect'
 import ChatClientRelay from '@/api/chat/ChatClientRelay'
-import ChatRenderer from '@/components/ChatRenderer'
+import ChatRenderer from '@/components/ChatRenderer/index.vue'
 import * as constants from '@/components/ChatRenderer/constants'
 
 export default {
@@ -81,7 +85,7 @@ export default {
       duration: '500'
     })
   },
-  beforeDestroy() {
+  beforeUnmount() {
     if (this.chatClient) {
       this.chatClient.stop()
     }
@@ -160,7 +164,11 @@ export default {
     },
 
     onAddText(data) {
-      if (!this.config.showDanmaku || !this.filterTextMessage(data) || this.mergeSimilarText(data.content)) {
+      if (
+        !this.config.showDanmaku ||
+        !this.filterTextMessage(data) ||
+        this.mergeSimilarText(data.content)
+      ) {
         return
       }
       let message = {
@@ -186,7 +194,8 @@ export default {
       if (this.mergeSimilarGift(data.authorName, price, data.giftName, data.num)) {
         return
       }
-      if (price < this.config.minGiftPrice) { // 丢人
+      if (price < this.config.minGiftPrice) {
+        // 丢人
         return
       }
       let message = {
@@ -222,7 +231,8 @@ export default {
       if (!this.config.showGift || !this.filterSuperChatMessage(data)) {
         return
       }
-      if (data.price < this.config.minGiftPrice) { // 丢人
+      if (data.price < this.config.minGiftPrice) {
+        // 丢人
         return
       }
       let message = {
@@ -245,7 +255,9 @@ export default {
       if (!this.config.autoTranslate) {
         return
       }
-      this.$refs.renderer.updateMessage(data.id, { translation: data.translation })
+      this.$refs.renderer.updateMessage(data.id, {
+        translation: data.translation
+      })
     },
 
     filterTextMessage(data) {

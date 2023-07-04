@@ -1,22 +1,43 @@
 <template>
   <yt-live-chat-text-message-renderer :author-type="authorTypeText">
-    <img-shadow id="author-photo" height="24" width="24" class="style-scope yt-live-chat-text-message-renderer"
+    <img-shadow
+      id="author-photo"
+      height="24"
+      width="24"
+      class="style-scope yt-live-chat-text-message-renderer"
       :imgUrl="avatarUrl"
     ></img-shadow>
     <div id="content" class="style-scope yt-live-chat-text-message-renderer">
-      <span id="timestamp" class="style-scope yt-live-chat-text-message-renderer">{{ timeText }}</span>
-      <author-chip class="style-scope yt-live-chat-text-message-renderer"
-        :isInMemberMessage="false" :authorName="authorName" :authorType="authorType" :privilegeType="privilegeType"
+      <span id="timestamp" class="style-scope yt-live-chat-text-message-renderer">{{
+        timeText
+      }}</span>
+      <author-chip
+        class="style-scope yt-live-chat-text-message-renderer"
+        :isInMemberMessage="false"
+        :authorName="authorName"
+        :authorType="authorType"
+        :privilegeType="privilegeType"
       ></author-chip>
       <span id="message" class="style-scope yt-live-chat-text-message-renderer">
         <template v-for="(content, index) in richContent">
-          <span :key="index" v-if="content.type === CONTENT_TYPE_TEXT">{{ content.text }}</span>
-          <img :key="index" v-else-if="content.type === CONTENT_TYPE_IMAGE"
+          <span :key="'text_' + index" v-if="content.type === CONTENT_TYPE_TEXT">{{
+            content.text
+          }}</span>
+          <img
+            :key="'image_' + index"
+            v-else-if="content.type === CONTENT_TYPE_IMAGE"
             class="emoji yt-formatted-string style-scope yt-live-chat-text-message-renderer"
-            :src="content.url" :alt="content.text" :shared-tooltip-text="content.text" :id="`emoji-${content.text}`"
-          >
+            :src="content.url"
+            :alt="content.text"
+            :shared-tooltip-text="content.text"
+            :id="`emoji-${content.text}`"
+          />
         </template>
-        <el-badge :value="repeated" :max="99" v-if="repeated > 1" class="style-scope yt-live-chat-text-message-renderer"
+        <el-badge
+          :model-value="repeated"
+          :max="99"
+          v-if="repeated > 1"
+          class="style-scope yt-live-chat-text-message-renderer"
           :style="{ '--repeated-mark-color': repeatedMarkColor }"
         ></el-badge>
       </span>
@@ -25,8 +46,8 @@
 </template>
 
 <script>
-import ImgShadow from './ImgShadow'
-import AuthorChip from './AuthorChip'
+import ImgShadow from './ImgShadow.vue'
+import AuthorChip from './AuthorChip.vue'
 import * as constants from './constants'
 import * as utils from '@/utils'
 
@@ -72,7 +93,9 @@ export default {
         color = [0, 0, 0]
         let t = (this.repeated - 2) / (10 - 2)
         for (let i = 0; i < 3; i++) {
-          color[i] = REPEATED_MARK_COLOR_START[i] + ((REPEATED_MARK_COLOR_END[i] - REPEATED_MARK_COLOR_START[i]) * t)
+          color[i] =
+            REPEATED_MARK_COLOR_START[i] +
+            (REPEATED_MARK_COLOR_END[i] - REPEATED_MARK_COLOR_START[i]) * t
         }
       }
       return `hsl(${color[0]}, ${color[1]}%, ${color[2]}%)`
@@ -82,16 +105,16 @@ export default {
 </script>
 
 <style>
-yt-live-chat-text-message-renderer>#content>#message>.el-badge {
+yt-live-chat-text-message-renderer > #content > #message > .el-badge {
   margin-left: 10px;
 }
 
-yt-live-chat-text-message-renderer>#content>#message>.el-badge .el-badge__content {
+yt-live-chat-text-message-renderer > #content > #message > .el-badge .el-badge__content {
   font-size: 12px !important;
   line-height: 18px !important;
   text-shadow: none !important;
   font-family: sans-serif !important;
-  color: #FFF !important;
+  color: #fff !important;
   background-color: var(--repeated-mark-color) !important;
   border: none;
 }

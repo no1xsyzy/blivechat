@@ -1,6 +1,7 @@
 import * as fonts from './fonts'
 
-export const FALLBACK_FONTS = ', "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "\\5FAE \\8F6F \\96C5 \\9ED1 ", SimHei, Arial, sans-serif'
+export const FALLBACK_FONTS =
+  ', "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "\\5FAE \\8F6F \\96C5 \\9ED1 ", SimHei, Arial, sans-serif'
 
 export const COMMON_STYLE = `/* Transparent background */
 yt-live-chat-renderer {
@@ -109,19 +110,23 @@ export function getAnimationStyle(config) {
   let keyframes = []
   let curTime = 0
   if (config.animateIn) {
-    keyframes.push(`  0% { opacity: 0;${!config.slide ? ''
-      : ` transform: translateX(${config.reverseSlide ? 16 : -16}px);`
-    } }`)
+    keyframes.push(
+      `  0% { opacity: 0;${
+        !config.slide ? '' : ` transform: translateX(${config.reverseSlide ? 16 : -16}px);`
+      } }`
+    )
     curTime += config.fadeInTime
-    keyframes.push(`  ${curTime / totalTime * 100}% { opacity: 1; transform: none; }`)
+    keyframes.push(`  ${(curTime / totalTime) * 100}% { opacity: 1; transform: none; }`)
   }
   if (config.animateOut) {
     curTime += config.animateOutWaitTime * 1000
-    keyframes.push(`  ${curTime / totalTime * 100}% { opacity: 1; transform: none; }`)
+    keyframes.push(`  ${(curTime / totalTime) * 100}% { opacity: 1; transform: none; }`)
     curTime += config.fadeOutTime
-    keyframes.push(`  ${curTime / totalTime * 100}% { opacity: 0;${!config.slide ? ''
-      : ` transform: translateX(${config.reverseSlide ? -16 : 16}px);`
-    } }`)
+    keyframes.push(
+      `  ${(curTime / totalTime) * 100}% { opacity: 0;${
+        !config.slide ? '' : ` transform: translateX(${config.reverseSlide ? -16 : 16}px);`
+      } }`
+    )
   }
   return `/* Animation */
 @keyframes anim {
@@ -155,7 +160,7 @@ function cssEscapeChar(char) {
 
 function needEscapeChar(char) {
   let code = char.codePointAt(0)
-  if (0x20 <= code && code <= 0x7E) {
+  if (0x20 <= code && code <= 0x7e) {
     return char === '"' || char === '\\'
   }
   return true

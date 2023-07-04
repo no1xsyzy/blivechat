@@ -8,40 +8,60 @@
       :default-active="$route.path"
     >
       <el-menu-item index="/">
-        <i class="el-icon-s-home"></i>{{ $t('sidebar.home') }}
+        <el-icon><el-icon-s-home /></el-icon>{{ $t('sidebar.home') }}
       </el-menu-item>
       <el-menu-item :index="$router.resolve({ name: 'stylegen' }).href">
-        <i class="el-icon-brush"></i>{{ $t('sidebar.stylegen') }}
+        <el-icon><el-icon-brush /></el-icon>{{ $t('sidebar.stylegen') }}
       </el-menu-item>
       <el-menu-item :index="$router.resolve({ name: 'help' }).href">
-        <i class="el-icon-question"></i>{{ $t('sidebar.help') }}
+        <el-icon><el-icon-question /></el-icon>{{ $t('sidebar.help') }}
       </el-menu-item>
       <a href="https://github.com/xfgryujk/blivechat" target="_blank">
         <el-menu-item>
-          <i class="el-icon-share"></i>{{ $t('sidebar.projectAddress') }}
+          <el-icon><el-icon-share /></el-icon>{{ $t('sidebar.projectAddress') }}
         </el-menu-item>
       </a>
       <a href="http://link.bilibili.com/ctool/vtuber" target="_blank">
         <el-menu-item>
-          <i class="el-icon-link"></i>{{ $t('sidebar.giftRecordOfficial') }}
+          <el-icon><el-icon-link /></el-icon>{{ $t('sidebar.giftRecordOfficial') }}
         </el-menu-item>
       </a>
-      <el-submenu index="null">
-        <template slot="title">
-          <i class="el-icon-chat-line-square"></i>Language
+      <el-sub-menu index="null">
+        <template v-slot:title>
+          <el-icon><el-icon-chat-line-square /></el-icon>Language
         </template>
-        <el-menu-item v-for="locale in LOCALES" :key="locale.locale" @click="onSelectLanguage(locale.locale)">
+        <el-menu-item
+          v-for="locale in LOCALES"
+          :key="locale.locale"
+          @click="onSelectLanguage(locale.locale)"
+        >
           <template>{{ locale.name }}</template>
         </el-menu-item>
-      </el-submenu>
+      </el-sub-menu>
     </el-menu>
   </el-scrollbar>
 </template>
 
 <script>
+import {
+  HomeFilled as ElIconSHome,
+  Brush as ElIconBrush,
+  QuestionFilled as ElIconQuestion,
+  Share as ElIconShare,
+  Link as ElIconLink,
+  ChatLineSquare as ElIconChatLineSquare
+} from '@element-plus/icons-vue'
 import * as i18n from '@/i18n'
 
 export default {
+  components: {
+    ElIconSHome,
+    ElIconBrush,
+    ElIconQuestion,
+    ElIconShare,
+    ElIconLink,
+    ElIconChatLineSquare
+  },
   name: 'Sidebar',
   data() {
     return {

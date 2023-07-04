@@ -1,65 +1,23 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import {
-  Aside, Autocomplete, Badge, Button, ButtonGroup, Card, Col, ColorPicker, Container, Divider, Form, FormItem, Image,
-  Input, Main, Menu, MenuItem, Message, Option, OptionGroup, Radio, RadioGroup, Row, Select, Scrollbar,
-  Slider, Submenu, Switch, Table, TableColumn, TabPane, Tabs, Tooltip
-} from 'element-ui'
+import * as Vue from 'vue'
+import * as VueRouter from 'vue-router'
+import ElementPlus from 'element-plus'
+import 'element-plus/dist/index.css'
+
 import axios from 'axios'
 
 import * as i18n from './i18n'
-import App from './App'
-import Layout from './layout'
-import Home from './views/Home'
-import StyleGenerator from './views/StyleGenerator'
-import Help from './views/Help'
-import Room from './views/Room'
-import NotFound from './views/NotFound'
+import App from './App.vue'
+import Layout from './layout/index.vue'
+import Home from './views/Home.vue'
+import StyleGenerator from './views/StyleGenerator/index.vue'
+import Help from './views/Help.vue'
+import Room from './views/Room.vue'
+import NotFound from './views/NotFound.vue'
 
 axios.defaults.timeout = 10 * 1000
 
-Vue.use(VueRouter)
-// 初始化element
-Vue.use(Aside)
-Vue.use(Autocomplete)
-Vue.use(Badge)
-Vue.use(Button)
-Vue.use(ButtonGroup)
-Vue.use(Card)
-Vue.use(Col)
-Vue.use(ColorPicker)
-Vue.use(Container)
-Vue.use(Divider)
-Vue.use(Form)
-Vue.use(FormItem)
-Vue.use(Image)
-Vue.use(Input)
-Vue.use(Main)
-Vue.use(Menu)
-Vue.use(MenuItem)
-Vue.use(Option)
-Vue.use(OptionGroup)
-Vue.use(Radio)
-Vue.use(RadioGroup)
-Vue.use(Row)
-Vue.use(Select)
-Vue.use(Scrollbar)
-Vue.use(Slider)
-Vue.use(Submenu)
-Vue.use(Switch)
-Vue.use(Table)
-Vue.use(TableColumn)
-Vue.use(TabPane)
-Vue.use(Tabs)
-Vue.use(Tooltip)
-Vue.prototype.$message = Message
-
-Vue.config.ignoredElements = [
-  /^yt-/
-]
-
-const router = new VueRouter({
-  mode: 'history',
+const router = VueRouter.createRouter({
+  history: VueRouter.createWebHistory(),
   routes: [
     {
       path: '/',
@@ -74,7 +32,7 @@ const router = new VueRouter({
       path: '/room/test',
       name: 'test_room',
       component: Room,
-      props: route => ({ strConfig: route.query })
+      props: (route) => ({ strConfig: route.query })
     },
     {
       path: '/room/:roomId',
@@ -88,12 +46,15 @@ const router = new VueRouter({
         return { roomId, strConfig: route.query }
       }
     },
-    { path: '*', component: NotFound }
+    { path: '/:pathMatch(.*)*', component: NotFound }
   ]
 })
 
-new Vue({
-  render: h => h(App),
-  router,
-  i18n: i18n.i18n
-}).$mount('#app')
+const app = Vue.createApp(App)
+
+app.config.compilerOptions.isCustomElement = tag => /^yt-/.exec(tag)
+app.use(router)
+app.use(ElementPlus)
+app.use(i18n.i18n)
+
+app.mount('#app')

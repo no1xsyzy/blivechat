@@ -1,12 +1,9 @@
-import Vue from 'vue'
-import VueI18n from 'vue-i18n'
+import { createI18n } from 'vue-i18n'
 
 import zh from '@/lang/zh'
 
 let lastSetLocale = 'zh'
 let loadedLocales = ['zh']
-
-Vue.use(VueI18n)
 
 export async function setLocale(locale) {
   lastSetLocale = locale
@@ -24,7 +21,7 @@ export async function setLocale(locale) {
   window.localStorage.lang = i18n.locale = locale
 }
 
-export const i18n = new VueI18n({
+export const i18n = createI18n({
   locale: 'zh',
   fallbackLocale: 'zh',
   messages: {

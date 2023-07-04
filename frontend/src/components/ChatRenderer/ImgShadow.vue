@@ -1,6 +1,20 @@
 <template>
-  <yt-img-shadow class="no-transition" :height="height" :width="width" style="background-color: transparent;" loaded>
-    <img id="img" class="style-scope yt-img-shadow" alt="" :height="height" :width="width" :src="showImgUrl" @error="onLoadError">
+  <yt-img-shadow
+    class="no-transition"
+    :height="height"
+    :width="width"
+    style="background-color: transparent"
+    loaded
+  >
+    <img
+      id="img"
+      class="style-scope yt-img-shadow"
+      alt=""
+      :height="height"
+      :width="width"
+      :src="showImgUrl"
+      @error="onLoadError"
+    />
   </yt-img-shadow>
 </template>
 

@@ -305,7 +305,7 @@
 <script>
 import _ from 'lodash'
 
-import FontSelect from './FontSelect'
+import FontSelect from './FontSelect.vue'
 import * as common from './common'
 import { mergeConfig } from '@/utils'
 
@@ -400,7 +400,14 @@ ${this.animationStyle}
     },
     importStyle() {
       let allFonts = []
-      for (let name of ['userNameFont', 'messageFont', 'timeFont', 'firstLineFont', 'secondLineFont', 'scContentFont']) {
+      for (let name of [
+        'userNameFont',
+        'messageFont',
+        'timeFont',
+        'firstLineFont',
+        'secondLineFont',
+        'scContentFont'
+      ]) {
         allFonts.push(this.form[name])
       }
       return common.getImportStyle(allFonts)
@@ -428,7 +435,9 @@ yt-live-chat-text-message-renderer yt-live-chat-author-badge-renderer[type="owne
 
 yt-live-chat-text-message-renderer #author-name[type="moderator"],
 yt-live-chat-text-message-renderer yt-live-chat-author-badge-renderer[type="moderator"] {
-  ${this.form.moderatorUserNameColor ? `color: ${this.form.moderatorUserNameColor} !important;` : ''}
+  ${
+    this.form.moderatorUserNameColor ? `color: ${this.form.moderatorUserNameColor} !important;` : ''
+  }
 }
 
 yt-live-chat-text-message-renderer #author-name[type="member"],
@@ -477,8 +486,10 @@ yt-live-chat-text-message-renderer #message::before {
   content: "";
   display: inline-block;
   position: absolute;
-  top: ${this.form.showUserNames ? (this.form.userNameLineHeight || this.form.userNameFontSize) + 10 : 20}px;
-  left: ${this.form.showAvatars ? this.form.avatarSize + (this.form.avatarSize / 4) - 8 : -8}px;
+  top: ${
+    this.form.showUserNames ? (this.form.userNameLineHeight || this.form.userNameFontSize) + 10 : 20
+  }px;
+  left: ${this.form.showAvatars ? this.form.avatarSize + this.form.avatarSize / 4 - 8 : -8}px;
   border: 8px solid transparent;
   border-right: 18px solid;
   transform: rotate(35deg);
@@ -517,9 +528,13 @@ yt-live-chat-membership-item-renderer #header {
 
 ${this.scTickerStyle}
 
-${this.form.showOtherThings ? '' : `yt-live-chat-item-list-renderer {
+${
+  this.form.showOtherThings
+    ? ''
+    : `yt-live-chat-item-list-renderer {
   display: none !important;
-}`}`
+}`
+}`
     },
     scAndNewMemberFontStyle() {
       return `yt-live-chat-paid-message-renderer #author-name,
@@ -552,9 +567,13 @@ yt-live-chat-paid-message-renderer #content * {
   margin: 4px 0 !important;`
     },
     scTickerStyle() {
-      return `${this.form.showScTicker ? '' : `yt-live-chat-ticker-renderer {
+      return `${
+        this.form.showScTicker
+          ? ''
+          : `yt-live-chat-ticker-renderer {
   display: none !important;
-}`}
+}`
+      }
 
 /* SuperChat Ticker */
 yt-live-chat-ticker-paid-message-item-renderer,
@@ -578,7 +597,7 @@ yt-live-chat-ticker-sponsor-item-renderer * {
     this.$emit('input', this.result)
   },
   methods: {
-    saveConfig: _.debounce(function() {
+    saveConfig: _.debounce(function () {
       let config = mergeConfig(this.form, DEFAULT_CONFIG)
       window.localStorage.stylegenLineLikeConfig = JSON.stringify(config)
     }, 500),

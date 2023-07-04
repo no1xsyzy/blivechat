@@ -9,14 +9,14 @@ export class PronunciationConverter {
   async loadDict(dictName) {
     let promise
     switch (dictName) {
-    case DICT_PINYIN:
-      promise = import('./dictPinyin')
-      break
-    case DICT_KANA:
-      promise = import('./dictKana')
-      break
-    default:
-      return
+      case DICT_PINYIN:
+        promise = import('./dictPinyin')
+        break
+      case DICT_KANA:
+        promise = import('./dictKana')
+        break
+      default:
+        return
     }
 
     let dictTxt = (await promise).default

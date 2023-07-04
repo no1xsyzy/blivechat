@@ -1,5 +1,11 @@
 <template>
-  <el-select :value="value" @input="val => $emit('input', val)" filterable allow-create default-first-option>
+  <el-select
+    :model-value="value"
+    @input="(val) => $emit('input', val)"
+    filterable
+    allow-create
+    default-first-option
+  >
     <el-option-group>
       <el-option v-for="font in LOCAL_FONTS" :key="font" :value="font"></el-option>
     </el-option-group>
@@ -28,6 +34,6 @@ export default {
 
 <style scoped>
 .el-select {
-  width: 100%
+  width: 100%;
 }
 </style>

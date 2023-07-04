@@ -18,9 +18,13 @@ export function processAvatarUrl(avatarUrl) {
 export async function getAvatarUrl(uid) {
   let res
   try {
-    res = (await axios.get('/api/avatar_url', { params: {
-      uid: uid
-    } })).data
+    res = (
+      await axios.get('/api/avatar_url', {
+        params: {
+          uid: uid
+        }
+      })
+    ).data
   } catch {
     return DEFAULT_AVATAR_URL
   }

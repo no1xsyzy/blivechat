@@ -55,7 +55,7 @@ export function sanitizeConfig(config) {
           keyword: emoticon.keyword,
           url: emoticon.url
         }
-        if ((typeof newEmoticon.keyword !== 'string') || (typeof newEmoticon.url !== 'string')) {
+        if (typeof newEmoticon.keyword !== 'string' || typeof newEmoticon.url !== 'string') {
           continue
         }
         newEmoticons.push(newEmoticon)

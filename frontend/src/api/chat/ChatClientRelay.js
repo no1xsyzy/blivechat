@@ -11,7 +11,7 @@ const COMMAND_UPDATE_TRANSLATION = 7
 const CONTENT_TYPE_EMOTICON = 1
 
 const HEARTBEAT_INTERVAL = 10 * 1000
-const RECEIVE_TIMEOUT = HEARTBEAT_INTERVAL + (5 * 1000)
+const RECEIVE_TIMEOUT = HEARTBEAT_INTERVAL + 5 * 1000
 
 export default class ChatClientRelay {
   constructor(roomId, autoTranslate) {
@@ -57,30 +57,37 @@ export default class ChatClientRelay {
 
   onWsOpen() {
     this.retryCount = 0
-    this.websocket.send(JSON.stringify({
-      cmd: COMMAND_JOIN_ROOM,
-      data: {
-        roomId: this.roomId,
-        config: {
-          autoTranslate: this.autoTranslate
+    this.websocket.send(
+      JSON.stringify({
+        cmd: COMMAND_JOIN_ROOM,
+        data: {
+          roomId: this.roomId,
+          config: {
+            autoTranslate: this.autoTranslate
+          }
         }
-      }
-    }))
+      })
+    )
     this.heartbeatTimerId = window.setInterval(this.sendHeartbeat.bind(this), HEARTBEAT_INTERVAL)
     this.refreshReceiveTimeoutTimer()
   }
 
   sendHeartbeat() {
-    this.websocket.send(JSON.stringify({
-      cmd: COMMAND_HEARTBEAT
-    }))
+    this.websocket.send(
+      JSON.stringify({
+        cmd: COMMAND_HEARTBEAT
+      })
+    )
   }
 
   refreshReceiveTimeoutTimer() {
     if (this.receiveTimeoutTimerId) {
       window.clearTimeout(this.receiveTimeoutTimerId)
     }
-    this.receiveTimeoutTimerId = window.setTimeout(this.onReceiveTimeout.bind(this), RECEIVE_TIMEOUT)
+    this.receiveTimeoutTimerId = window.setTimeout(
+      this.onReceiveTimeout.bind(this),
+      RECEIVE_TIMEOUT
+    )
   }
 
   onReceiveTimeout() {
@@ -116,75 +123,75 @@ export default class ChatClientRelay {
 
     let { cmd, data } = JSON.parse(event.data)
     switch (cmd) {
-    case COMMAND_HEARTBEAT: {
-      break
-    }
-    case COMMAND_ADD_TEXT: {
-      if (!this.onAddText) {
+      case COMMAND_HEARTBEAT: {
         break
       }
+      case COMMAND_ADD_TEXT: {
+        if (!this.onAddText) {
+          break
+        }
 
-      let emoticon = null
-      let contentType = data[13]
-      let contentTypeParams = data[14]
-      if (contentType === CONTENT_TYPE_EMOTICON) {
-        emoticon = contentTypeParams[0]
-      }
+        let emoticon = null
+        let contentType = data[13]
+        let contentTypeParams = data[14]
+        if (contentType === CONTENT_TYPE_EMOTICON) {
+          emoticon = contentTypeParams[0]
+        }
 
-      data = {
-        avatarUrl: data[0],
-        timestamp: data[1],
-        authorName: data[2],
-        authorType: data[3],
-        content: data[4],
-        privilegeType: data[5],
-        isGiftDanmaku: Boolean(data[6]),
-        authorLevel: data[7],
-        isNewbie: Boolean(data[8]),
-        isMobileVerified: Boolean(data[9]),
-        medalLevel: data[10],
-        id: data[11],
-        translation: data[12],
-        emoticon: emoticon
-      }
-      this.onAddText(data)
-      break
-    }
-    case COMMAND_ADD_GIFT: {
-      if (this.onAddGift) {
-        this.onAddGift(data)
-      }
-      break
-    }
-    case COMMAND_ADD_MEMBER: {
-      if (this.onAddMember) {
-        this.onAddMember(data)
-      }
-      break
-    }
-    case COMMAND_ADD_SUPER_CHAT: {
-      if (this.onAddSuperChat) {
-        this.onAddSuperChat(data)
-      }
-      break
-    }
-    case COMMAND_DEL_SUPER_CHAT: {
-      if (this.onDelSuperChat) {
-        this.onDelSuperChat(data)
-      }
-      break
-    }
-    case COMMAND_UPDATE_TRANSLATION: {
-      if (!this.onUpdateTranslation) {
+        data = {
+          avatarUrl: data[0],
+          timestamp: data[1],
+          authorName: data[2],
+          authorType: data[3],
+          content: data[4],
+          privilegeType: data[5],
+          isGiftDanmaku: Boolean(data[6]),
+          authorLevel: data[7],
+          isNewbie: Boolean(data[8]),
+          isMobileVerified: Boolean(data[9]),
+          medalLevel: data[10],
+          id: data[11],
+          translation: data[12],
+          emoticon: emoticon
+        }
+        this.onAddText(data)
         break
       }
-      data = {
-        id: data[0],
-        translation: data[1]
+      case COMMAND_ADD_GIFT: {
+        if (this.onAddGift) {
+          this.onAddGift(data)
+        }
+        break
       }
-      this.onUpdateTranslation(data)
-      break
-    }
+      case COMMAND_ADD_MEMBER: {
+        if (this.onAddMember) {
+          this.onAddMember(data)
+        }
+        break
+      }
+      case COMMAND_ADD_SUPER_CHAT: {
+        if (this.onAddSuperChat) {
+          this.onAddSuperChat(data)
+        }
+        break
+      }
+      case COMMAND_DEL_SUPER_CHAT: {
+        if (this.onDelSuperChat) {
+          this.onDelSuperChat(data)
+        }
+        break
+      }
+      case COMMAND_UPDATE_TRANSLATION: {
+        if (!this.onUpdateTranslation) {
+          break
+        }
+        data = {
+          id: data[0],
+          translation: data[1]
+        }
+        this.onUpdateTranslation(data)
+        break
+      }
     }
   }
 }

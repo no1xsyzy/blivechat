@@ -12,19 +12,14 @@ export const AUTHOR_TYPE_TO_TEXT = [
   'owner' // 主播
 ]
 
-const GUARD_LEVEL_TO_TEXT_KEY = [
-  '',
-  'chat.guardLevel1',
-  'chat.guardLevel2',
-  'chat.guardLevel3'
-]
+const GUARD_LEVEL_TO_TEXT_KEY = ['', 'chat.guardLevel1', 'chat.guardLevel2', 'chat.guardLevel3']
 
 export function getShowGuardLevelText(guardLevel) {
   let key = GUARD_LEVEL_TO_TEXT_KEY[guardLevel] || ''
   if (key === '') {
     return ''
   }
-  return i18n.i18n.t(key)
+  return i18n.i18n.global.t(key)
 }
 
 export const MESSAGE_TYPE_TEXT = 0
@@ -40,7 +35,8 @@ export const CONTENT_TYPE_IMAGE = 1
 // 美元 -> 人民币 汇率
 const EXCHANGE_RATE = 7
 export const PRICE_CONFIGS = [
-  { // $100红
+  {
+    // $100红
     price: 100 * EXCHANGE_RATE,
     colors: {
       contentBg: 'rgba(230,33,23,1)',
@@ -52,7 +48,8 @@ export const PRICE_CONFIGS = [
     },
     pinTime: 60
   },
-  { // $50品红
+  {
+    // $50品红
     price: 50 * EXCHANGE_RATE,
     colors: {
       contentBg: 'rgba(233,30,99,1)',
@@ -64,7 +61,8 @@ export const PRICE_CONFIGS = [
     },
     pinTime: 30
   },
-  { // $20橙
+  {
+    // $20橙
     price: 20 * EXCHANGE_RATE,
     colors: {
       contentBg: 'rgba(245,124,0,1)',
@@ -76,7 +74,8 @@ export const PRICE_CONFIGS = [
     },
     pinTime: 10
   },
-  { // $10黄
+  {
+    // $10黄
     price: 10 * EXCHANGE_RATE,
     colors: {
       contentBg: 'rgba(255,202,40,1)',
@@ -88,7 +87,8 @@ export const PRICE_CONFIGS = [
     },
     pinTime: 5
   },
-  { // $5绿
+  {
+    // $5绿
     price: 5 * EXCHANGE_RATE,
     colors: {
       contentBg: 'rgba(29,233,182,1)',
@@ -100,7 +100,8 @@ export const PRICE_CONFIGS = [
     },
     pinTime: 2
   },
-  { // $2浅蓝
+  {
+    // $2浅蓝
     price: 2 * EXCHANGE_RATE,
     colors: {
       contentBg: 'rgba(0,229,255,1)',
@@ -112,7 +113,8 @@ export const PRICE_CONFIGS = [
     },
     pinTime: 0
   },
-  { // $1蓝
+  {
+    // $1蓝
     price: EXCHANGE_RATE,
     colors: {
       contentBg: 'rgba(30,136,229,1)',
@@ -157,7 +159,10 @@ export function getGiftShowContent(message, showGiftName) {
   if (!showGiftName) {
     return ''
   }
-  return i18n.i18n.t('chat.sendGift', { giftName: message.giftName, num: message.num })
+  return i18n.i18n.global.t('chat.sendGift', {
+    giftName: message.giftName,
+    num: message.num
+  })
 }
 
 export function getShowAuthorName(message) {

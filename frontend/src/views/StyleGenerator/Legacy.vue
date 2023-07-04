@@ -355,7 +355,7 @@
 <script>
 import _ from 'lodash'
 
-import FontSelect from './FontSelect'
+import FontSelect from './FontSelect.vue'
 import * as common from './common'
 import { mergeConfig } from '@/utils'
 
@@ -463,7 +463,14 @@ ${this.animationStyle}
     },
     importStyle() {
       let allFonts = []
-      for (let name of ['userNameFont', 'messageFont', 'timeFont', 'firstLineFont', 'secondLineFont', 'scContentFont']) {
+      for (let name of [
+        'userNameFont',
+        'messageFont',
+        'timeFont',
+        'firstLineFont',
+        'secondLineFont',
+        'scContentFont'
+      ]) {
         allFonts.push(this.form[name])
       }
       return common.getImportStyle(allFonts)
@@ -489,8 +496,16 @@ yt-live-chat-renderer * {
         return ''
       }
       let shadow = []
-      for (let x = -this.form.outlineSize; x <= this.form.outlineSize; x += Math.ceil(this.form.outlineSize / 4)) {
-        for (let y = -this.form.outlineSize; y <= this.form.outlineSize; y += Math.ceil(this.form.outlineSize / 4)) {
+      for (
+        let x = -this.form.outlineSize;
+        x <= this.form.outlineSize;
+        x += Math.ceil(this.form.outlineSize / 4)
+      ) {
+        for (
+          let y = -this.form.outlineSize;
+          y <= this.form.outlineSize;
+          y += Math.ceil(this.form.outlineSize / 4)
+        ) {
           shadow.push(`${x}px ${y}px ${this.form.outlineColor}`)
         }
       }
@@ -508,7 +523,9 @@ yt-live-chat-text-message-renderer yt-live-chat-author-badge-renderer[type="owne
 
 yt-live-chat-text-message-renderer #author-name[type="moderator"],
 yt-live-chat-text-message-renderer yt-live-chat-author-badge-renderer[type="moderator"] {
-  ${this.form.moderatorUserNameColor ? `color: ${this.form.moderatorUserNameColor} !important;` : ''}
+  ${
+    this.form.moderatorUserNameColor ? `color: ${this.form.moderatorUserNameColor} !important;` : ''
+  }
 }
 
 yt-live-chat-text-message-renderer #author-name[type="member"],
@@ -524,11 +541,15 @@ yt-live-chat-text-message-renderer #author-name {
   line-height: ${this.form.userNameLineHeight || this.form.userNameFontSize}px !important;
 }
 
-${!this.form.showColon ? '' : `/* Show colon */
+${
+  !this.form.showColon
+    ? ''
+    : `/* Show colon */
 yt-live-chat-text-message-renderer #author-name::after {
   content: ":";
   margin-left: ${this.form.outlineSize}px;
-}`}
+}`
+}
 
 /* Hide badges */
 yt-live-chat-text-message-renderer #chat-badges {
@@ -546,10 +567,14 @@ yt-live-chat-text-message-renderer #message * {
   line-height: ${this.form.messageLineHeight || this.form.messageFontSize}px !important;
 }
 
-${!this.form.messageOnNewLine ? '' : `yt-live-chat-text-message-renderer #message {
+${
+  !this.form.messageOnNewLine
+    ? ''
+    : `yt-live-chat-text-message-renderer #message {
   display: block !important;
   overflow: visible !important;
-}`}
+}`
+}
 
 yt-live-chat-text-message-renderer #message .emoji {
   width: auto !important;
@@ -589,9 +614,13 @@ yt-live-chat-membership-item-renderer #header {
 
 ${this.scTickerStyle}
 
-${this.form.showOtherThings ? '' : `yt-live-chat-item-list-renderer {
+${
+  this.form.showOtherThings
+    ? ''
+    : `yt-live-chat-item-list-renderer {
   display: none !important;
-}`}`
+}`
+}`
     },
     scAndNewMemberFontStyle() {
       return `yt-live-chat-paid-message-renderer #author-name,
@@ -633,9 +662,13 @@ yt-live-chat-paid-message-renderer #content * {
       }
     },
     scTickerStyle() {
-      return `${this.form.showScTicker ? '' : `yt-live-chat-ticker-renderer {
+      return `${
+        this.form.showScTicker
+          ? ''
+          : `yt-live-chat-ticker-renderer {
   display: none !important;
-}`}
+}`
+      }
 
 /* SuperChat Ticker */
 yt-live-chat-ticker-paid-message-item-renderer,
@@ -660,7 +693,7 @@ yt-live-chat-ticker-sponsor-item-renderer * {
     this.$emit('input', this.result)
   },
   methods: {
-    saveConfig: _.debounce(function() {
+    saveConfig: _.debounce(function () {
       let config = mergeConfig(this.form, DEFAULT_CONFIG)
       window.localStorage.stylegenConfig = JSON.stringify(config)
     }, 500),

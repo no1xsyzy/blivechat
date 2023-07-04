@@ -4,7 +4,7 @@ export default {
     stylegen: 'Style Generator',
     help: 'Help',
     projectAddress: 'Project Address',
-    giftRecordOfficial: 'Official Super Chat Record',
+    giftRecordOfficial: 'Official Super Chat Record'
   },
   home: {
     roomIdEmpty: "Room ID can't be empty",

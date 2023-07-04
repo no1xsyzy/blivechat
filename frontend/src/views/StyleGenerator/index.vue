@@ -31,7 +31,11 @@
             <el-switch v-model="playAnimation" @change="onPlayAnimationChange"></el-switch>
           </el-form-item>
           <el-form-item :label="$t('stylegen.backgrounds')" style="margin: 0 0 0 30px">
-            <el-switch v-model="exampleBgLight" :active-text="$t('stylegen.light')" :inactive-text="$t('stylegen.dark')"></el-switch>
+            <el-switch
+              v-model="exampleBgLight"
+              :active-text="$t('stylegen.light')"
+              :inactive-text="$t('stylegen.dark')"
+            ></el-switch>
           </el-form-item>
         </el-form>
         <div id="example-container" :class="{ light: exampleBgLight }">
@@ -47,14 +51,16 @@
 <script>
 import _ from 'lodash'
 
-import Legacy from './Legacy'
-import LineLike from './LineLike'
-import Room from '@/views/Room'
+import Legacy from './Legacy.vue'
+import LineLike from './LineLike.vue'
+import Room from '@/views/Room.vue'
 
 export default {
   name: 'StyleGenerator',
   components: {
-    Legacy, LineLike, Room
+    Legacy,
+    LineLike,
+    Room
   },
   data() {
     let styleElement = document.createElement('style')
@@ -94,7 +100,7 @@ export default {
     subComponentResult(val) {
       this.inputResult = val
     },
-    inputResult: _.debounce(function(val) {
+    inputResult: _.debounce(function (val) {
       this.debounceResult = val
     }, 500),
     exampleCss(val) {
@@ -106,7 +112,7 @@ export default {
 
     this.$parent.$el.addEventListener('scroll', this.onParentScroll)
   },
-  beforeDestroy() {
+  beforeUnmount() {
     this.$parent.$el.removeEventListener('scroll', this.onParentScroll)
 
     document.head.removeChild(this.styleElement)
@@ -143,16 +149,20 @@ export default {
   height: calc(100vh - 150px);
 
   background-color: #444;
-  background-image:
-    -moz-linear-gradient(45deg, #333 25%, transparent 25%),
+  background-image: -moz-linear-gradient(45deg, #333 25%, transparent 25%),
     -moz-linear-gradient(-45deg, #333 25%, transparent 25%),
     -moz-linear-gradient(45deg, transparent 75%, #333 75%),
     -moz-linear-gradient(-45deg, transparent 75%, #333 75%);
-  background-image:
-    -webkit-gradient(linear, 0 100%, 100% 0, color-stop(.25, #333), color-stop(.25, transparent)),
-    -webkit-gradient(linear, 0 0, 100% 100%, color-stop(.25, #333), color-stop(.25, transparent)),
-    -webkit-gradient(linear, 0 100%, 100% 0, color-stop(.75, transparent), color-stop(.75, #333)),
-    -webkit-gradient(linear, 0 0, 100% 100%, color-stop(.75, transparent), color-stop(.75, #333));
+  background-image: -webkit-gradient(
+      linear,
+      0 100%,
+      100% 0,
+      color-stop(0.25, #333),
+      color-stop(0.25, transparent)
+    ),
+    -webkit-gradient(linear, 0 0, 100% 100%, color-stop(0.25, #333), color-stop(0.25, transparent)),
+    -webkit-gradient(linear, 0 100%, 100% 0, color-stop(0.75, transparent), color-stop(0.75, #333)),
+    -webkit-gradient(linear, 0 0, 100% 100%, color-stop(0.75, transparent), color-stop(0.75, #333));
 
   -moz-background-size: 32px 32px;
   background-size: 32px 32px;
@@ -168,16 +178,20 @@ export default {
 
 #example-container.light {
   background-color: #ddd;
-  background-image:
-    -moz-linear-gradient(45deg, #eee 25%, transparent 25%),
+  background-image: -moz-linear-gradient(45deg, #eee 25%, transparent 25%),
     -moz-linear-gradient(-45deg, #eee 25%, transparent 25%),
     -moz-linear-gradient(45deg, transparent 75%, #eee 75%),
     -moz-linear-gradient(-45deg, transparent 75%, #eee 75%);
-  background-image:
-    -webkit-gradient(linear, 0 100%, 100% 0, color-stop(.25, #eee), color-stop(.25, transparent)),
-    -webkit-gradient(linear, 0 0, 100% 100%, color-stop(.25, #eee), color-stop(.25, transparent)),
-    -webkit-gradient(linear, 0 100%, 100% 0, color-stop(.75, transparent), color-stop(.75, #eee)),
-    -webkit-gradient(linear, 0 0, 100% 100%, color-stop(.75, transparent), color-stop(.75, #eee));
+  background-image: -webkit-gradient(
+      linear,
+      0 100%,
+      100% 0,
+      color-stop(0.25, #eee),
+      color-stop(0.25, transparent)
+    ),
+    -webkit-gradient(linear, 0 0, 100% 100%, color-stop(0.25, #eee), color-stop(0.25, transparent)),
+    -webkit-gradient(linear, 0 100%, 100% 0, color-stop(0.75, transparent), color-stop(0.75, #eee)),
+    -webkit-gradient(linear, 0 0, 100% 100%, color-stop(0.75, transparent), color-stop(0.75, #eee));
 }
 
 #fakebody {

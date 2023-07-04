@@ -4,7 +4,7 @@
     <el-aside width="230px" class="sidebar-container" :class="{ 'hide-sidebar': hideSidebar }">
       <div class="logo-container">
         <router-link to="/">
-          <img src="@/assets/img/logo.png" class="sidebar-logo">
+          <img src="@/assets/img/logo.png" class="sidebar-logo" />
           <h1 class="sidebar-title">blivechat</h1>
         </router-link>
       </div>
@@ -12,7 +12,12 @@
       <sidebar></sidebar>
     </el-aside>
     <el-main>
-      <el-button v-show="isMobile" class="menu-button" icon="el-icon-s-unfold" @click="hideSidebar = false"></el-button>
+      <el-button
+        v-show="isMobile"
+        class="menu-button"
+        :icon="ElIconSUnfold"
+        @click="hideSidebar = false"
+      ></el-button>
       <keep-alive>
         <router-view></router-view>
       </keep-alive>
@@ -21,26 +26,27 @@
 </template>
 
 <script>
-import Sidebar from './Sidebar'
+import { Expand as ElIconSUnfold } from '@element-plus/icons-vue'
+import Sidebar from './Sidebar.vue'
 
 export default {
+  data() {
+    return {
+      APP_VERSION: (typeof process === 'undefined') ? "dev" : process.env.APP_VERSION,
+      isMobile: false,
+      hideSidebar: true,
+      ElIconSUnfold
+    }
+  },
   name: 'Layout',
   components: {
     Sidebar
-  },
-  data() {
-    return {
-      APP_VERSION: process.env.APP_VERSION,
-
-      isMobile: false,
-      hideSidebar: true
-    }
   },
   mounted() {
     window.addEventListener('resize', this.onResize)
     this.onResize()
   },
-  beforeDestroy() {
+  beforeUnmount() {
     window.removeEventListener('resize', this.onResize)
   },
   methods: {
@@ -53,10 +59,15 @@ export default {
 
 <style>
 html {
-  font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "\5FAE \8F6F \96C5 \9ED1 ", "微软雅黑", Arial, sans-serif;
+  font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei',
+    '\5FAE \8F6F \96C5 \9ED1 ', '微软雅黑', Arial, sans-serif;
 }
 
-html, body, #app, .app-wrapper, .sidebar-container {
+html,
+body,
+#app,
+.app-wrapper,
+.sidebar-container {
   height: 100%;
 }
 
@@ -65,7 +76,9 @@ body {
   background-color: #f6f8fa;
 }
 
-a, a:focus, a:hover {
+a,
+a:focus,
+a:hover {
   text-decoration: none;
 }
 

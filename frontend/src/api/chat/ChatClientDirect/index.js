@@ -37,7 +37,7 @@ const AUTH_REPLY_CODE_OK = 0
 // const AUTH_REPLY_CODE_TOKEN_ERROR = -101
 
 const HEARTBEAT_INTERVAL = 10 * 1000
-const RECEIVE_TIMEOUT = HEARTBEAT_INTERVAL + (5 * 1000)
+const RECEIVE_TIMEOUT = HEARTBEAT_INTERVAL + 5 * 1000
 
 let textEncoder = new TextEncoder()
 let textDecoder = new TextDecoder()
@@ -48,7 +48,12 @@ export default class ChatClientDirect {
     this.roomId = roomId
     this.roomOwnerUid = 0
     this.hostServerList = [
-      { host: "broadcastlv.chat.bilibili.com", port: 2243, wss_port: 443, ws_port: 2244 }
+      {
+        host: 'broadcastlv.chat.bilibili.com',
+        port: 2243,
+        wss_port: 443,
+        ws_port: 2244
+      }
     ]
 
     this.onAddText = null
@@ -80,9 +85,13 @@ export default class ChatClientDirect {
   async initRoom() {
     let res
     try {
-      res = (await axios.get('/api/room_info', { params: {
-        roomId: this.roomId
-      } })).data
+      res = (
+        await axios.get('/api/room_info', {
+          params: {
+            roomId: this.roomId
+          }
+        })
+      ).data
     } catch {
       return
     }
@@ -97,11 +106,11 @@ export default class ChatClientDirect {
     let body = textEncoder.encode(JSON.stringify(data))
     let header = new ArrayBuffer(HEADER_SIZE)
     let headerView = new DataView(header)
-    headerView.setUint32(0, HEADER_SIZE + body.byteLength)   // pack_len
-    headerView.setUint16(4, HEADER_SIZE)                     // raw_header_size
-    headerView.setUint16(6, 1)                               // ver
-    headerView.setUint32(8, operation)                       // operation
-    headerView.setUint32(12, 1)                              // seq_id
+    headerView.setUint32(0, HEADER_SIZE + body.byteLength) // pack_len
+    headerView.setUint16(4, HEADER_SIZE) // raw_header_size
+    headerView.setUint16(6, 1) // ver
+    headerView.setUint32(8, operation) // operation
+    headerView.setUint32(12, 1) // seq_id
     return new Blob([header, body])
   }
 
@@ -143,7 +152,10 @@ export default class ChatClientDirect {
     if (this.receiveTimeoutTimerId) {
       window.clearTimeout(this.receiveTimeoutTimerId)
     }
-    this.receiveTimeoutTimerId = window.setTimeout(this.onReceiveTimeout.bind(this), RECEIVE_TIMEOUT)
+    this.receiveTimeoutTimerId = window.setTimeout(
+      this.onReceiveTimeout.bind(this),
+      RECEIVE_TIMEOUT
+    )
   }
 
   onReceiveTimeout() {
@@ -206,34 +218,35 @@ export default class ChatClientDirect {
     // let seqId = dataView.getUint32(12)
 
     switch (operation) {
-    case OP_AUTH_REPLY:
-    case OP_SEND_MSG_REPLY: {
-      // 业务消息，可能有多个包一起发，需要分包
-      while (true) { // eslint-disable-line no-constant-condition
-        let body = new Uint8Array(data.buffer, offset + rawHeaderSize, packLen - rawHeaderSize)
-        this.parseBusinessMessage(dataView, body)
+      case OP_AUTH_REPLY:
+      case OP_SEND_MSG_REPLY: {
+        // 业务消息，可能有多个包一起发，需要分包
+        while (true) {
+          // eslint-disable-line no-constant-condition
+          let body = new Uint8Array(data.buffer, offset + rawHeaderSize, packLen - rawHeaderSize)
+          this.parseBusinessMessage(dataView, body)
 
-        offset += packLen
-        if (offset >= data.byteLength) {
-          break
+          offset += packLen
+          if (offset >= data.byteLength) {
+            break
+          }
+
+          dataView = new DataView(data.buffer, offset)
+          packLen = dataView.getUint32(0)
+          rawHeaderSize = dataView.getUint16(4)
         }
-
-        dataView = new DataView(data.buffer, offset)
-        packLen = dataView.getUint32(0)
-        rawHeaderSize = dataView.getUint16(4)
+        break
       }
-      break
-    }
-    case OP_HEARTBEAT_REPLY: {
-      // 服务器心跳包，包含人气值，这里没用
-      break
-    }
-    default: {
-      // 未知消息
-      let body = new Uint8Array(data.buffer, offset + rawHeaderSize, packLen - rawHeaderSize)
-      console.warn('未知包类型，operation=', operation, dataView, body)
-      break
-    }
+      case OP_HEARTBEAT_REPLY: {
+        // 服务器心跳包，包含人气值，这里没用
+        break
+      }
+      default: {
+        // 未知消息
+        let body = new Uint8Array(data.buffer, offset + rawHeaderSize, packLen - rawHeaderSize)
+        console.warn('未知包类型，operation=', operation, dataView, body)
+        break
+      }
     }
   }
 
@@ -242,43 +255,43 @@ export default class ChatClientDirect {
     let operation = dataView.getUint32(8)
 
     switch (operation) {
-    case OP_SEND_MSG_REPLY: {
-      // 业务消息
-      if (ver == WS_BODY_PROTOCOL_VERSION_BROTLI) {
-        // 压缩过的先解压
-        body = BrotliDecode(body)
-        this.parseWsMessage(body)
-      } else {
-        // 没压缩过的直接反序列化
-        if (body.length !== 0) {
-          try {
-            body = JSON.parse(textDecoder.decode(body))
-            this.handlerCommand(body)
-          } catch (e) {
-            console.error('body=', body)
-            throw e
+      case OP_SEND_MSG_REPLY: {
+        // 业务消息
+        if (ver == WS_BODY_PROTOCOL_VERSION_BROTLI) {
+          // 压缩过的先解压
+          body = BrotliDecode(body)
+          this.parseWsMessage(body)
+        } else {
+          // 没压缩过的直接反序列化
+          if (body.length !== 0) {
+            try {
+              body = JSON.parse(textDecoder.decode(body))
+              this.handlerCommand(body)
+            } catch (e) {
+              console.error('body=', body)
+              throw e
+            }
           }
         }
+        break
       }
-      break
-    }
-    case OP_AUTH_REPLY: {
-      // 认证响应
-      body = JSON.parse(textDecoder.decode(body))
-      if (body.code !== AUTH_REPLY_CODE_OK) {
-        console.error('认证响应错误，body=', body)
-        // 这里应该重新获取token再重连的，但前端没有用到token，所以不重新init了
-        this.discardWebsocket()
-        throw new Error('认证响应错误')
+      case OP_AUTH_REPLY: {
+        // 认证响应
+        body = JSON.parse(textDecoder.decode(body))
+        if (body.code !== AUTH_REPLY_CODE_OK) {
+          console.error('认证响应错误，body=', body)
+          // 这里应该重新获取token再重连的，但前端没有用到token，所以不重新init了
+          this.discardWebsocket()
+          throw new Error('认证响应错误')
+        }
+        this.sendHeartbeat()
+        break
       }
-      this.sendHeartbeat()
-      break
-    }
-    default: {
-      // 未知消息
-      console.warn('未知包类型，operation=', operation, dataView, body)
-      break
-    }
+      default: {
+        // 未知消息
+        console.warn('未知包类型，operation=', operation, dataView, body)
+        break
+      }
     }
   }
 
@@ -346,7 +359,8 @@ export default class ChatClientDirect {
       return
     }
     let data = command.data
-    if (data.coin_type !== 'gold') { // 丢人
+    if (data.coin_type !== 'gold') {
+      // 丢人
       return
     }
 

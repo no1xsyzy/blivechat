@@ -1,22 +1,53 @@
-import { getUuid4Hex } from '@/utils'
+import { getUuid4Hex } from '@/utils/index'
 import * as constants from '@/components/ChatRenderer/constants'
 import * as avatar from './avatar'
 
 const NAMES = [
-  'xfgryujk', 'Simon', 'Il Harper', 'Kinori', 'shugen', 'yuyuyzl', '3Shain', '光羊', '黑炎', 'Misty', '孤梦星影',
-  'ジョナサン・ジョースター', 'ジョセフ・ジョースター', 'ディオ・ブランドー', '空條承太郎', '博丽灵梦', '雾雨魔理沙',
+  'xfgryujk',
+  'Simon',
+  'Il Harper',
+  'Kinori',
+  'shugen',
+  'yuyuyzl',
+  '3Shain',
+  '光羊',
+  '黑炎',
+  'Misty',
+  '孤梦星影',
+  'ジョナサン・ジョースター',
+  'ジョセフ・ジョースター',
+  'ディオ・ブランドー',
+  '空條承太郎',
+  '博丽灵梦',
+  '雾雨魔理沙',
   'Rick Astley'
 ]
 
 const CONTENTS = [
-  '草', 'kksk', '8888888888', '888888888888888888888888888888', '老板大气，老板身体健康',
-  'The quick brown fox jumps over the lazy dog', "I can eat glass, it doesn't hurt me",
-  '我不做人了，JOJO', '無駄無駄無駄無駄無駄無駄無駄無駄', '欧啦欧啦欧啦欧啦欧啦欧啦欧啦欧啦', '逃げるんだよォ！',
-  '嚯，朝我走过来了吗，没有选择逃跑而是主动接近我么', '不要停下来啊', '已经没有什么好怕的了',
-  'I am the bone of my sword. Steel is my body, and fire is my blood.', '言いたいことがあるんだよ！',
-  '我忘不掉夏小姐了。如果不是知道了夏小姐，说不定我已经对这个世界没有留恋了', '迷えば、敗れる',
-  'Farewell, ashen one. May the flame guide thee', '竜神の剣を喰らえ！', '竜が我が敌を喰らう！',
-  '有一说一，这件事大家懂的都懂，不懂的，说了你也不明白，不如不说', '让我看看', '我柜子动了，我不玩了'
+  '草',
+  'kksk',
+  '8888888888',
+  '888888888888888888888888888888',
+  '老板大气，老板身体健康',
+  'The quick brown fox jumps over the lazy dog',
+  "I can eat glass, it doesn't hurt me",
+  '我不做人了，JOJO',
+  '無駄無駄無駄無駄無駄無駄無駄無駄',
+  '欧啦欧啦欧啦欧啦欧啦欧啦欧啦欧啦',
+  '逃げるんだよォ！',
+  '嚯，朝我走过来了吗，没有选择逃跑而是主动接近我么',
+  '不要停下来啊',
+  '已经没有什么好怕的了',
+  'I am the bone of my sword. Steel is my body, and fire is my blood.',
+  '言いたいことがあるんだよ！',
+  '我忘不掉夏小姐了。如果不是知道了夏小姐，说不定我已经对这个世界没有留恋了',
+  '迷えば、敗れる',
+  'Farewell, ashen one. May the flame guide thee',
+  '竜神の剣を喰らえ！',
+  '竜が我が敌を喰らう！',
+  '有一说一，这件事大家懂的都懂，不懂的，说了你也不明白，不如不说',
+  '让我看看',
+  '我柜子动了，我不玩了'
 ]
 
 const EMOTICONS = [
@@ -54,9 +85,7 @@ const GIFT_INFO_LIST = [
   { giftName: '小电视飞船', totalCoin: 1245000 }
 ]
 
-const SC_PRICES = [
-  30, 50, 100, 200, 500, 1000
-]
+const SC_PRICES = [30, 50, 100, 200, 500, 1000]
 
 const MESSAGE_GENERATORS = [
   // 文字
@@ -189,7 +218,7 @@ function randomChoose(nodes) {
 }
 
 function randInt(min, max) {
-  return Math.floor(min + ((max - min + 1) * Math.random()))
+  return Math.floor(min + (max - min + 1) * Math.random())
 }
 
 export default class ChatClientTest {
@@ -219,7 +248,10 @@ export default class ChatClientTest {
   }
 
   refreshTimer() {
-    this.timerId = window.setTimeout(this.onTimeout.bind(this), randInt(this.minSleepTime, this.maxSleepTime))
+    this.timerId = window.setTimeout(
+      this.onTimeout.bind(this),
+      randInt(this.minSleepTime, this.maxSleepTime)
+    )
   }
 
   onTimeout() {
@@ -227,18 +259,18 @@ export default class ChatClientTest {
 
     let { type, message } = randomChoose(MESSAGE_GENERATORS)()
     switch (type) {
-    case constants.MESSAGE_TYPE_TEXT:
-      this.onAddText(message)
-      break
-    case constants.MESSAGE_TYPE_GIFT:
-      this.onAddGift(message)
-      break
-    case constants.MESSAGE_TYPE_MEMBER:
-      this.onAddMember(message)
-      break
-    case constants.MESSAGE_TYPE_SUPER_CHAT:
-      this.onAddSuperChat(message)
-      break
+      case constants.MESSAGE_TYPE_TEXT:
+        this.onAddText(message)
+        break
+      case constants.MESSAGE_TYPE_GIFT:
+        this.onAddGift(message)
+        break
+      case constants.MESSAGE_TYPE_MEMBER:
+        this.onAddMember(message)
+        break
+      case constants.MESSAGE_TYPE_SUPER_CHAT:
+        this.onAddSuperChat(message)
+        break
     }
   }
 }

@@ -4,7 +4,7 @@ export default {
     stylegen: 'スタイルジェネレータ',
     help: 'ヘルプ',
     projectAddress: 'プロジェクトアドレス',
-    giftRecordOfficial: '公式スーパーチャット記録',
+    giftRecordOfficial: '公式スーパーチャット記録'
   },
   home: {
     roomIdEmpty: 'ルームのIDを空白にすることはできません',
